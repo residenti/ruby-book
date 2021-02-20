@@ -3,43 +3,33 @@ require './lib/gate'
 require './lib/ticket'
 
 class GateTest < Minitest::Test
-  def test_gate_1
-    ticket = Ticket.new(150)
-
-    umeda = Gate.new(:umeda)
-    juso = Gate.new(:juso)
-
-    umeda.enter(ticket)
-    assert juso.exit(ticket)
+  def setup
+    @umeda = Gate.new(:umeda)
+    @juso = Gate.new(:juso)
+    @mikuni = Gate.new(:mikuni)
   end
 
-  def test_gate_2
+  def test_umeda_to_juso
     ticket = Ticket.new(150)
-
-    umeda = Gate.new(:umeda)
-    mikuni = Gate.new(:mikuni)
-
-    umeda.enter(ticket)
-    assert_equal false, mikuni.exit(ticket)
+    @umeda.enter(ticket)
+    assert @juso.exit(ticket)
   end
 
-  def test_gate_3
+  def test_umeda_to_mikuni_when_fare_is_not_enough
+    ticket = Ticket.new(150)
+    @umeda.enter(ticket)
+    refute @mikuni.exit(ticket)
+  end
+
+  def test_umeda_to_mikuni_when_fare_is_enough
     ticket = Ticket.new(190)
-
-    umeda = Gate.new(:umeda)
-    mikuni = Gate.new(:mikuni)
-
-    umeda.enter(ticket)
-    assert mikuni.exit(ticket)
+    @umeda.enter(ticket)
+    assert @mikuni.exit(ticket)
   end
 
-  def test_gate_4
+  def test_juso_to_mikuni
     ticket = Ticket.new(150)
-
-    juso = Gate.new(:juso)
-    mikuni = Gate.new(:mikuni)
-
-    juso.enter(ticket)
-    assert mikuni.exit(ticket)
+    @juso.enter(ticket)
+    assert @mikuni.exit(ticket)
   end
 end
